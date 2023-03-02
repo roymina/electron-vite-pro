@@ -5,6 +5,9 @@ import Components from 'unplugin-vue-components/vite'
 import AutoImport from 'unplugin-auto-import/vite'
 import Pages from 'vite-plugin-pages'
 import Layouts from 'vite-plugin-vue-layouts'
+import Icons from 'unplugin-icons/vite'
+import IconsResolver from 'unplugin-icons/resolver'
+import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 
 export default defineConfig({
   main: {
@@ -21,15 +24,15 @@ export default defineConfig({
     },
     plugins: [
       vue(),
-      Components(),
+      Components({
+        resolvers: [ElementPlusResolver(), IconsResolver({ prefix: 'icon' })]
+      }),
       AutoImport({
-        include: [
-          /\.[tj]sx?$/, // .ts, .tsx, .js, .jsx
-          /\.vue$/,
-          /\.vue\?vue/
-        ],
-        dirs: ['./composables'],
-        imports: ['vue', 'vue-router']
+        imports: ['vue', 'vue-router'],
+        resolvers: [ElementPlusResolver(), IconsResolver()]
+      }),
+      Icons({
+        autoInstall: true //在icon引入时，将自动安装图标集。自动探测项目使用的是npm,yarn,还是pnpm
       }),
       Pages(),
       Layouts()
